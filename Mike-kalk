@@ -1,0 +1,147 @@
+using System.IO;
+using System;
+using System.Numerics;
+using System.Text;
+
+internal class Program
+{
+    private static void Main(string[] args)
+    {
+        float a;
+        string nums;
+        string filePath = "/Users/goddamn/MyFile.txt"; // path, where file will be created
+
+
+
+
+        Console.WriteLine("Vítejte v kalkulačce");
+        Console.WriteLine("Zadejte číslo:");
+
+
+
+
+        while (!float.TryParse(Console.ReadLine(), out a))
+            Console.WriteLine("Neplatné číslo, zadejte prosím znovu:");
+        bool pokracovat = true;
+
+
+
+        while (pokracovat)
+        {
+
+            //Console.WriteLine("Zadejte operátor:");
+            //string b = Console.ReadLine();
+            //if (b == "konec" || b == "Konec")
+            //{
+            //    Console.WriteLine("Konec programu");
+            //    return;
+            //}
+            while (pokracovat)
+            {
+
+
+                Console.WriteLine("Zadejte operátor:");
+                string b = Console.ReadLine();
+                if (b == "konec" || b == "Konec")
+                {
+                    Console.WriteLine("Konec programu");
+                    pokracovat = false;
+                    return;
+                }
+
+
+
+                else if (b != "+" && b != "-" && b != "*" && b != "/")
+                {
+                    Console.WriteLine("Invalid operator, try again please (+,-,*,/)");
+                    continue;
+                }
+
+
+
+
+
+                Console.WriteLine("Zadejte číslo:");
+                float c;
+                while (!float.TryParse(Console.ReadLine(), out c))
+                    Console.WriteLine("Neplatné číslo, zadejte prosím znovu:");
+
+                File.AppendAllText("/Users/goddamn/MyFile.txt", Convert.ToString(a));
+
+                if (b == "+")
+                {
+                    a = a + c;
+                    Console.WriteLine("Výsledek je: {0}", a);
+                }
+                else if (b == "-")
+                {
+                    a = a - c;
+                    Console.WriteLine("Výsledek je: {0}", a);
+                }
+                else if (b == "")
+                {
+                    a = a * c;
+                    Console.WriteLine("Výsledek je: {0}", a);
+                }
+                else if (b == "/")
+                {
+                    a = a / c;
+                    Console.WriteLine("Výsledek je: {0}", a);
+                }
+
+
+
+                try
+                {
+                    // open the file with append mode, so it doesn't delete old text
+                    using (FileStream fs = new FileStream(filePath, FileMode.Append))
+                    {
+                        // add some text to the end of the file and end 
+                        //byte[] text = new System.Text.UTF8Encoding(true).GetBytes("TEST\n");
+                        //fs.Write(text, 0, text.Length);
+                        File.AppendAllText("/Users/goddamn/MyFile.txt", b);
+                        File.AppendAllText("/Users/goddamn/MyFile.txt", Convert.ToString(c));
+                        File.AppendAllText("/Users/goddamn/MyFile.txt", "=");
+                        File.AppendAllText("/Users/goddamn/MyFile.txt", Convert.ToString(a));
+                        File.AppendAllText("/Users/goddamn/MyFile.txt", "\n");
+                    }
+
+                    //Console.WriteLine("File updated successfully!");  -   only for testing purpose
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.ToString());
+                }
+
+
+                Console.WriteLine("Do you want to clear hisotry?(y/n)");
+                string YesOrNo = Console.ReadLine();
+
+                if (YesOrNo == "y" || YesOrNo == "YES" || YesOrNo == "Yes" || YesOrNo == "yes" || YesOrNo == "Y")
+                {
+                    File.WriteAllText("/Users/goddamn/MyFile.txt", string.Empty);
+                    Console.WriteLine("History cleared");
+                }
+
+                else
+                {
+                    Console.WriteLine("Continuing calculation");
+                    continue;
+                }
+
+
+
+                Console.WriteLine("Do you want to show history of your calculations?(y/n)");
+                string YepOrNope = Console.ReadLine();
+
+
+                if (YepOrNope == "y" || YepOrNope == "YES" || YepOrNope == "Yes" || YepOrNope == "yes" || YepOrNope == "Y")
+                {
+                    string TextFromFile = File.ReadAllText(@"/Users/goddamn/MyFile.txt", Encoding.UTF8);
+                    Console.WriteLine("your history");
+                    Console.WriteLine(TextFromFile);
+                }
+            }
+        }
+    }
+}
